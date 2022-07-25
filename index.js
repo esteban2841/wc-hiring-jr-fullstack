@@ -36,8 +36,92 @@ import $t from './libs/test.js'
 import _ from 'lodash'
 const source = $t.source(1)
 $t.answer(1, async () => {
-  // Your code goes here
-  return 
+
+  const restaurantsIncome = []
+  const incomeEarnings = []
+  const groceriesIncome = []
+  const rentIncome = []
+
+  source.forEach(business => {
+    if(business.category == "Restaurants" && business.type == "income"){
+        restaurantsIncome.push(business.amount)
+      }
+      if(business.category == "Income" && business.type == "income"){
+        incomeEarnings.push(business.amount)
+        
+      }
+      if(business.category == "Groceries" && business.type == "income"){
+        groceriesIncome.push(business.amount)
+      }
+      if(business.category == "Rent" && business.type == "income"){
+        rentIncome.push(business.amount)
+        
+      }
+  })
+
+  const restaurantExpenses = []
+  const incomeExpenses = []
+  const groceriesExpenses = []
+  const rentExpenses = []
+
+  source.forEach(business => {
+    if(business.category == "Restaurants" && business.type == "expense"){
+        restaurantExpenses.push(business.amount)
+      }
+      if(business.category == "Income" && business.type == "expense"){
+        incomeExpenses.push(business.amount )
+        
+      }
+      if(business.category == "Groceries" && business.type == "expense"){
+        groceriesExpenses.push(business.amount )
+      }
+      if(business.category == "Rent" && business.type == "expense"){
+        rentExpenses.push(business.amount )
+        
+      }
+  })
+  
+  let totalRestaurantsIncome = restaurantsIncome.length > 0 ? restaurantsIncome.reduce((a,b)=> a+b) : 0
+  let totalIncomeEarnings = incomeEarnings.length > 0 ? incomeEarnings.reduce((a,b)=> a+b) : 0
+  let totalGroceriesIncome = groceriesIncome.length > 0 ? groceriesIncome.reduce((a,b)=> a+b):0
+  let totalRentIncome = rentIncome.length > 0 ? rentIncome.reduce((a,b)=> a+b): 0
+  
+  let income =  [
+    totalRestaurantsIncome,
+    totalIncomeEarnings,
+    totalGroceriesIncome,
+    totalRentIncome
+  ]
+  
+  let totalRestaurantsExpenses = restaurantExpenses.length > 0 ? restaurantExpenses.reduce((a,b)=> a+b):0
+  let totalIncomeExpenses = incomeExpenses.length > 0 ? incomeExpenses.reduce((a,b)=> a+b):0
+  let totalGroceriesExpenses = groceriesExpenses.length > 0 ? groceriesExpenses.reduce((a,b)=> a+b):0
+  let totalRentExpenses = rentExpenses.length > 0 ? rentExpenses.reduce((a,b)=> a+b):0
+  
+  let expenses = [
+    totalRestaurantsExpenses,
+    totalIncomeExpenses,
+    totalGroceriesExpenses,
+    totalRentExpenses
+  ]
+  
+
+  const totalIncome = income.reduce((a,b)=> a+b)
+  const totalExpenses = expenses.reduce((a,b)=> a+b)
+
+  const targetData = {
+    balance: totalIncome - totalExpenses,
+    income: totalIncome,
+    expenses: totalExpenses,
+    byCategories :{
+      Restaurants: income[0] - expenses[0],
+      Income: income[1] - expenses[1],
+      Groceries: income[2] - expenses[2],
+      Rent: income[3] - expenses[3]
+    }
+  }
+  
+  return targetData
 })
 
 /*
@@ -49,9 +133,8 @@ $t.answer(1, async () => {
 */
 const $source = $t.source(2)
 $t.answer(2, async () => {
-    // Your code goes here:
-    // 1. Get ids: $source.getIds()
-    // 2. Get text for every id: $source.getText(id)
-    // 3. Return array of texts
-    return 
+    const ids = await $source.getIds()
+    const text = await Promise.all(ids.map(async (id)=> await $source.getText(id)))
+    
+    return text
 })
